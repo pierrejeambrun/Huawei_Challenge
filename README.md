@@ -3,8 +3,8 @@
 
 ### I Introduction
 This is the code used for the  **Huawei Challenge**.
-You can find the code of the android application in the `app` module and the code of
-the machine learning module in `ml_module`.
+You can find the code of the android application in the `Android_Studio` module and the code of
+the machine learning module in `Ml_Module`.
 
 ### II Installation
 You will need to install and configure the **LAMP** stack (Linux Apache MySQL Php), you can see how

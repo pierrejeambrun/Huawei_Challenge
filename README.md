@@ -30,10 +30,10 @@ The tutorial for this lib is [there](https://developer.android.com/training/voll
 * Now select the directory where you downloaded Volley to.
 * Now Android studio might guide you to do the rest but continue guide to verify that everything works correct
 * Open settings.gradle (find in root) and add (or verify this is included):
-``` java
+```
 include ':app', ':volley'
 ```
 * Now go to your build.gradle in your project and add the dependency:
-``` java
-compile project(":volley")
+```
+compile 'com.android.volley:volley:1.1.0'
 ```

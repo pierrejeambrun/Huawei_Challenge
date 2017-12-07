@@ -3,8 +3,13 @@ package com.huaweichallenge.app.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+<<<<<<< HEAD
 import android.os.Bundle;
+=======
+import android.content.SharedPreferences;
+>>>>>>> 1fda6f90bcedf914155808fbf20a79d3d0f060b3
 import android.util.Log;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -13,9 +18,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.huaweichallenge.app.Constants;
+import com.huaweichallenge.app.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.huaweichallenge.app.Constants.PREFS_NAME;
 
 public class LoginService extends IntentService {
 
@@ -67,7 +75,12 @@ public class LoginService extends IntentService {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        Log.i(String.format("VOLLEY: Login succeeded, token: %s, user_id: %s", response.getString("token"), response.getInt("user_id")), response.getString("token"));
+                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("user_id", response.getString("user_id"));
+                        editor.putString("token", response.getString("token"));
+                        editor.apply();
+
                         Intent intent = new Intent("LOGIN");
                         Bundle bundle = new Bundle();
                         bundle.putBoolean("success", true);

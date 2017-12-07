@@ -46,6 +46,12 @@ public class RegisterActivity extends AppCompatActivity {
         registerReceiver(receiver, intentFilter);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
     public void registerButtonClicked(View view) {
         boolean wrongInput = false;
 

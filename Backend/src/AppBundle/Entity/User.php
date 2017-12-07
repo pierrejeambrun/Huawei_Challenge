@@ -193,5 +193,14 @@ class User implements UserInterface, \Serializable
     public function eraseCredentials()
     {
     }
+
+    public function toJson()
+    {
+        return array(
+            "id" => $this->id,
+            "username" => $this->username,
+            "name" => $this->name,
+        );
+    }
 }
 

@@ -3,9 +3,11 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
@@ -41,24 +43,35 @@ class UserController extends ApiController
      */
     public function newAction(Request $request)
     {
+        //var_dump($this->isValid($request));die;
+        $response = new JsonResponse();
+
+        if (!$this->isValid($request)) {
+            $response->setData(array("error" => "Missing Parameter"));
+            $response->setStatusCode(400);
+            return $response;
+        }
+
         $user = new User();
-        $form = $this->createForm('AppBundle\Form\UserType', $user);
 
-        $form->handleRequest($request);
-
+        $user->setUsername($request->get("username"));
+        $user->setName($request->get("name"));
         $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT, array('cost' => 12)));
-        if ($form->isSubmitted() && $form->isValid()) {
+
+        try {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
 
-            return $this->redirectToRoute('user_show', array('id' => $user->getId()));
+            $response->setData($user);
+            $response->setStatusCode(200);
+        } catch (UniqueConstraintViolationException $e) {
+            $response->setData(array("error" => "Username already exists."));
+            $response->setStatusCode(400);
         }
 
-        return $this->render('user/new.html.twig', array(
-            'user' => $user,
-            'form' => $form->createView(),
-        ));
+
+        return $response;
     }
 
     /**
@@ -127,7 +140,7 @@ class UserController extends ApiController
      *
      * @param User $user The user entity
      *
-     * @return \Symfony\Component\Form\Form The form
+     * @return \Symfony\Component\Form\FormInterface The form
      */
     private function createDeleteForm(User $user)
     {
@@ -136,5 +149,12 @@ class UserController extends ApiController
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+
+    private function isValid(Request $request)
+    {
+        return $request->get('username') != null
+            && $request->get('name') != null
+            && $request->get('password') != null;
     }
 }

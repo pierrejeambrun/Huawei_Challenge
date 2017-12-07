@@ -82,13 +82,13 @@ public class RegisterService extends IntentService {
             JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    setRegisterSuccessInBundle(true);
+                    sendRegisterBroadCast(true);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    setRegisterSuccessInBundle(false);
-                    Log.e("VOLLEY", "Sign up failed");
+                    sendRegisterBroadCast(false);
+                    Log.e("VOLLEY", "Register Failed!");
                 }
             }) {
                 @Override
@@ -103,7 +103,7 @@ public class RegisterService extends IntentService {
 
     }
 
-    private void setRegisterSuccessInBundle(boolean value) {
+    private void sendRegisterBroadCast(boolean value) {
         Intent intent = new Intent(REGISTER);
         Bundle bundle = new Bundle();
         bundle.putBoolean("registerSuccess", value);

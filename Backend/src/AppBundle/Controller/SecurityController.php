@@ -13,6 +13,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoder;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\MessageDigestPasswordEncoder;
 
 class SecurityController extends Controller
 {
@@ -29,32 +30,33 @@ class SecurityController extends Controller
     /**
      * @var string Uniquely identifies the secured area
      */
-    private $providerKey;
+    private $providerKey = "this_provider";
 
 
     /**
-     * @Route("/login", name="login")
+     * @Route("/api/login", name="api_login_check")
      */
     public function loginAction(Request $request, AuthenticationUtils $authUtils)
     {
         // get the login error if there is one
         $error = $authUtils->getLastAuthenticationError();
 
-        $username = $request['username'];
-        $password = $request['password'];
+        $username = $request->get('username');
+        $password = $request->get('password');
 
-        $encoder = new UserPasswordEncoder();
-        $this->getDoctrine()->getRepository("AppBundle:User")->findBy({
+        $encoder = new MessageDigestPasswordEncoder('sha512', true, 10);
+        $user = $this->getDoctrine()->getRepository("AppBundle:User")->findBy([
             "username" => $username,
-            "password" => $encoder->encodePassword($user, $plainPassword);
-        })
+            "password" => $encoder->encodePassword($password, $username) //salt is username
+        ]);
 
-        $unauthenticatedToken = new UsernamePasswordToken(
+        return new JsonResponse(array("id" => $user->getId()));
+        /*$unauthenticatedToken = new UsernamePasswordToken(
             $username,
             $password,
-            $this->providerKey
-        );
-
+            $user
+        );*/
+        var_dump($encoder->encodePassword($password, $username));die;
         $authenticatedToken = $this
             ->authenticationManager
             ->authenticate($unauthenticatedToken);
@@ -63,8 +65,6 @@ class SecurityController extends Controller
 
         // instances of Symfony\Component\Security\Core\Authentication\Provider\AuthenticationProviderInterface
 
-
-        $authenticationManager = new AuthenticationProviderManager($providers);
 
         try {
         $authenticatedToken = $authenticationManager

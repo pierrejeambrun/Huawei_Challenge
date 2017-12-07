@@ -7,13 +7,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Encoder\BCryptPasswordEncoder;
 
 /**
  * User controller.
  *
  * @Route("user")
  */
-class UserController extends Controller
+class UserController extends ApiController
 {
     /**
      * Lists all user entities.
@@ -42,8 +43,10 @@ class UserController extends Controller
     {
         $user = new User();
         $form = $this->createForm('AppBundle\Form\UserType', $user);
+
         $form->handleRequest($request);
 
+        $user->setPassword(password_hash($user->getPassword(), PASSWORD_BCRYPT, array('cost' => 12)));
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

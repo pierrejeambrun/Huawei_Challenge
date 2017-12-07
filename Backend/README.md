@@ -1,4 +1,15 @@
 Backend
 =======
 
-A Symfony project created on December 7, 2017, 2:35 pm.
+## Installation
+
+To be able to run this locally, first make sure to install __symfony 3.4__. Then run:
+```
+composer install
+```
+
+To start server:
+```
+php bin/console server:start
+```
+

@@ -39,7 +39,9 @@
         android:layout_centerHorizontal="true"
         android:gravity="center|bottom"
         android:orientation="vertical"
-        android:weightSum="1">
+        android:weightSum="1"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp">
 
         <TextView
             android:id="@+id/textView2"
@@ -49,9 +51,9 @@
 
         <Button
             android:id="@+id/button3"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Widget.AppCompat.Button.Colored"
             android:onClick="onHTTPButtonClick"
             android:text="Balance" />
     </LinearLayout>

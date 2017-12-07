@@ -3,11 +3,8 @@ package com.huaweichallenge.app.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
-<<<<<<< HEAD
 import android.os.Bundle;
-=======
 import android.content.SharedPreferences;
->>>>>>> 1fda6f90bcedf914155808fbf20a79d3d0f060b3
 import android.util.Log;
 import android.widget.EditText;
 

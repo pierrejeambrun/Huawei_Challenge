@@ -46,6 +46,12 @@ public class LoginActivity extends AppCompatActivity {
         registerReceiver(receiver, intentFilter);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
     public void loggingButtonClicked(View view) {
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
         String password = ((EditText) findViewById(R.id.passwordField)).getText().toString();

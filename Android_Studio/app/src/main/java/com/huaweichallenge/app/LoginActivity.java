@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         final IntentFilter intentFilter = new IntentFilter("LOGIN");
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
@@ -53,13 +53,17 @@ public class LoginActivity extends AppCompatActivity {
         LoginService.startActionLogin(this, username, password);
     }
 
+    public void registerButtonClicked(View view) {
+        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+    }
+
 
     public class LoginReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            boolean success = bundle.getBoolean("success");
+            boolean success = bundle.getBoolean("loginSuccess");
             if (success) {
                 alreadyFailedLogin = false;
                 setContentView(R.layout.activity_main);

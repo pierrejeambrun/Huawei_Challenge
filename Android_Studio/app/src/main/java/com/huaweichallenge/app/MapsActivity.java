@@ -17,10 +17,12 @@ import com.huaweichallenge.app.services.MapsService;
 
 import java.util.ArrayList;
 
+import static com.huaweichallenge.app.MapsActivity.MarkerReceiver.ACTION_GET_MARKERS;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public class MarkerReceiver extends BroadcastReceiver {
-        public static final String ACTION_GET_MARKERS ="action_get_markers";
+        public static final String ACTION_GET_MARKERS = "action_get_markers";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -53,7 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onResume();
 
         // on déclare notre Broadcast Receiver
-        IntentFilter filter = new IntentFilter(markerReceiver.ACTION_GET_MARKERS);
+        IntentFilter filter = new IntentFilter(ACTION_GET_MARKERS);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(markerReceiver, filter);
     }
@@ -66,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMapClick(LatLng l) {
                 mMap.addMarker(new MarkerOptions().position(l));
-                MapsService.startActionPostMarker(MapsActivity.this,l);
+                MapsService.startActionPostMarker(MapsActivity.this, l);
             }
         });
 

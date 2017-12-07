@@ -1,10 +1,9 @@
 package com.huaweichallenge.app.services;
 
 import android.app.IntentService;
-import android.content.Context;
 import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
-import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -18,25 +17,34 @@ import com.huaweichallenge.app.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import static com.huaweichallenge.app.Constants.LOGIN_URL;
-import static com.huaweichallenge.app.Constants.USER_ID_TOKEN_LOCAL_STORAGE;
+import static com.huaweichallenge.app.Constants.REGISTER_URL;
 
-public class LoginService extends IntentService {
+public class RegisterService extends IntentService {
 
-    private static final String LOGIN = "LOGIN";
-    private static final String REFRESH_TOKEN = "REFRESH_TOKEN";
+    private static final String REGISTER = "REGISTER";
 
     private static final String USERNAME = "USERNAME";
+    private static final String MAIL = "MAIL";
+    private static final String ADDRESS = "ADDRESS";
+    private static final String SEX = "SEX";
     private static final String PASSWORD = "PASSWORD";
 
-    public LoginService() {
-        super("LoginService");
+    public RegisterService() {
+        super("RegisterService");
     }
 
-    public static void startActionLogin(Context context, String username, String password) {
-        Intent intent = new Intent(context, LoginService.class);
-        intent.setAction(LOGIN);
+    public static void startActionRegister(Context context,
+                                           String username,
+                                           String mail,
+                                           String address,
+                                           String sex,
+                                           String password) {
+        Intent intent = new Intent(context, RegisterService.class);
+        intent.setAction(REGISTER);
         intent.putExtra(USERNAME, username);
+        intent.putExtra(MAIL, mail);
+        intent.putExtra(ADDRESS, address);
+        intent.putExtra(SEX, sex);
         intent.putExtra(PASSWORD, password);
         context.startService(intent);
     }
@@ -45,48 +53,42 @@ public class LoginService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             final String action = intent.getAction();
-            if (LOGIN.equals(action)) {
+            if (REGISTER.equals(action)) {
                 final String username = intent.getStringExtra(USERNAME);
+                final String mail = intent.getStringExtra(MAIL);
+                final String address = intent.getStringExtra(ADDRESS);
+                final String sex = intent.getStringExtra(SEX);
                 final String password = intent.getStringExtra(PASSWORD);
-                handleActionLogin(username, password);
-            } else if (REFRESH_TOKEN.equals(action)) {
-                handleActionRefreshToken();
+                handleActionRegister(username, mail, address, sex, password);
             }
         }
     }
 
-    private void handleActionRefreshToken() {
-        throw new UnsupportedOperationException("Refresh Token action not implemented yet");
-    }
-
-    private void handleActionLogin(String username, String password) {
+    private void handleActionRegister(String username,
+                                      String mail,
+                                      String address,
+                                      String sex,
+                                      String password) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = Constants.SERVER_IP + LOGIN_URL;
+            String URL = Constants.SERVER_IP + REGISTER_URL;
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("username", username);
+            jsonBody.put("mail", mail);
+            jsonBody.put("address", address);
+            jsonBody.put("sex", sex);
             jsonBody.put("password", password);
 
             JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
-                    try {
-                        SharedPreferences settings = getSharedPreferences(USER_ID_TOKEN_LOCAL_STORAGE, 0);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString("user_id", response.getString("user_id"));
-                        editor.putString("token", response.getString("token"));
-                        editor.apply();
-
-                        setLoginSuccessInBundle(true);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    setRegisterSuccessInBundle(true);
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    setLoginSuccessInBundle(false);
-                    Log.e("VOLLEY", "Login Failed");
+                    setRegisterSuccessInBundle(false);
+                    Log.e("VOLLEY", "Sign up failed");
                 }
             }) {
                 @Override
@@ -98,14 +100,16 @@ public class LoginService extends IntentService {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
     }
 
-    private void setLoginSuccessInBundle(boolean value) {
-        Intent intent = new Intent(LOGIN);
+    private void setRegisterSuccessInBundle(boolean value) {
+        Intent intent = new Intent(REGISTER);
         Bundle bundle = new Bundle();
-        bundle.putBoolean("loginSuccess", value);
+        bundle.putBoolean("registerSuccess", value);
         intent.putExtras(bundle);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         sendBroadcast(intent);
     }
+
 }

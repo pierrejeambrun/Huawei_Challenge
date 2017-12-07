@@ -47,6 +47,10 @@
         <service
             android:name=".services.LoginService"
             android:exported="false"/>
+        <service
+            android:name=".services.MapsService"
+            android:exported="false"></service>
+
     </application>
 
 </manifest>

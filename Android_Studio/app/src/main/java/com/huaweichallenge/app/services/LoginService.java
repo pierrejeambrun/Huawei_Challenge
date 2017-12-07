@@ -3,7 +3,9 @@ package com.huaweichallenge.app.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.EditText;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -12,9 +14,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.huaweichallenge.app.Constants;
+import com.huaweichallenge.app.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import static com.huaweichallenge.app.Constants.PREFS_NAME;
 
 public class LoginService extends IntentService {
 
@@ -62,11 +67,17 @@ public class LoginService extends IntentService {
             jsonBody.put("username", username);
             jsonBody.put("password", password);
 
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         Log.i(String.format("VOLLEY: Login succeeded, token: %s, user_id: %s", response.getString("token"), response.getInt("user_id")), response.getString("token"));
+                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString("user_id", response.getString("user_id"));
+                        editor.putString("token", response.getString("token"));
+                        editor.apply();
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

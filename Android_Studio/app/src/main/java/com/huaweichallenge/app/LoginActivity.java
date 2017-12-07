@@ -9,6 +9,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
+import com.huaweichallenge.app.services.LoginService;
+
 public class LoginActivity extends AppCompatActivity {
 
     @Override
@@ -31,6 +33,6 @@ public class LoginActivity extends AppCompatActivity {
     public void loggingButtonClicked(View view) {
         String username = ((EditText) findViewById(R.id.usernameField)).getText().toString();
         String password = ((EditText) findViewById(R.id.passwordField)).getText().toString();
-        Log.w("Loggin Clicked", String.format("%s %s", username, password));
+        LoginService.startActionLogin(this, username, password);
     }
 }

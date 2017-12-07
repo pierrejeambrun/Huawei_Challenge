@@ -3,6 +3,7 @@ package com.huaweichallenge.app.services;
 import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -62,11 +63,17 @@ public class LoginService extends IntentService {
             jsonBody.put("username", username);
             jsonBody.put("password", password);
 
-            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, URL,jsonBody, new Response.Listener<JSONObject>() {
+            JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.POST, URL, jsonBody, new Response.Listener<JSONObject>() {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
                         Log.i(String.format("VOLLEY: Login succeeded, token: %s, user_id: %s", response.getString("token"), response.getInt("user_id")), response.getString("token"));
+                        Intent intent = new Intent("LOGIN");
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("success", true);
+                        intent.putExtras(bundle);
+                        intent.addCategory(Intent.CATEGORY_DEFAULT);
+                        sendBroadcast(intent);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -74,6 +81,12 @@ public class LoginService extends IntentService {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    Intent intent = new Intent("LOGIN");
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("success", false);
+                    intent.putExtras(bundle);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    sendBroadcast(intent);
                     Log.e("VOLLEY", "Login Failed");
                 }
             }) {

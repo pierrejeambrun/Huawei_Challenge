@@ -39,7 +39,11 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
+
         <service android:name=".services.LoginService" ></service>
+        <service
+            android:name=".services.MapsService"
+            android:exported="false"></service>
     </application>
 
 </manifest>

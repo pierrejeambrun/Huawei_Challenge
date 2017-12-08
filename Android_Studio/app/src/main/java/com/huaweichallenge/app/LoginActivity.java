@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -40,11 +39,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         final IntentFilter intentFilter = new IntentFilter("LOGIN");
         intentFilter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     public void loggingButtonClicked(View view) {
@@ -53,13 +58,17 @@ public class LoginActivity extends AppCompatActivity {
         LoginService.startActionLogin(this, username, password);
     }
 
+    public void registerButtonClicked(View view) {
+        startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+    }
+
 
     public class LoginReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            boolean success = bundle.getBoolean("success");
+            boolean success = bundle.getBoolean("loginSuccess");
             if (success) {
                 alreadyFailedLogin = false;
                 setContentView(R.layout.activity_main);

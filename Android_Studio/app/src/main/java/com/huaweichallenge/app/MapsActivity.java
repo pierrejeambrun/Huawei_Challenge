@@ -17,10 +17,12 @@ import com.huaweichallenge.app.services.MapsService;
 
 import java.util.ArrayList;
 
+import static com.huaweichallenge.app.MapsActivity.MarkerReceiver.ACTION_GET_MARKERS;
+
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     public class MarkerReceiver extends BroadcastReceiver {
-        public static final String ACTION_GET_MARKERS ="action_get_markers";
+        public static final String ACTION_GET_MARKERS = "action_get_markers";
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -44,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // on initialise notre broadcast
+        // Initialize the broadcast receiver
         markerReceiver = new MarkerReceiver();
     }
 
@@ -52,10 +54,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
 
-        // on déclare notre Broadcast Receiver
-        IntentFilter filter = new IntentFilter(markerReceiver.ACTION_GET_MARKERS);
+        // Register the receiver
+        IntentFilter filter = new IntentFilter(ACTION_GET_MARKERS);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(markerReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(markerReceiver);
     }
 
     @Override
@@ -66,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMapClick(LatLng l) {
                 mMap.addMarker(new MarkerOptions().position(l));
-                MapsService.startActionPostMarker(MapsActivity.this,l);
+                MapsService.startActionPostMarker(MapsActivity.this, l);
             }
         });
 
@@ -76,6 +84,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         MapsService.startActionGetMarkers(this);
-
     }
 }

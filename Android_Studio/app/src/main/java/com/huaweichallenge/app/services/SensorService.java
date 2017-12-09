@@ -83,10 +83,12 @@ public class SensorService extends Service implements SensorEventListener {
 
             setDataHashMapInBundle(sentData);
 
-            accelerationValues = new ArrayList<float[]>(accelerationValues.subList(55,accelerationValues.size()));
-            gyroscopicValues = new ArrayList<float[]>(gyroscopicValues.subList(55,gyroscopicValues.size()));
-            accelerationMagnitudes = new ArrayList<Float>(accelerationMagnitudes.subList(55,accelerationMagnitudes.size()));
-            gyroscopicMagnitudes = new ArrayList<Float>(gyroscopicMagnitudes.subList(55,gyroscopicMagnitudes.size()));
+            int windowSize = 127;
+
+            accelerationValues = new ArrayList<float[]>(accelerationValues.subList(windowSize,accelerationValues.size()));
+            gyroscopicValues = new ArrayList<float[]>(gyroscopicValues.subList(windowSize,gyroscopicValues.size()));
+            accelerationMagnitudes = new ArrayList<Float>(accelerationMagnitudes.subList(windowSize,accelerationMagnitudes.size()));
+            gyroscopicMagnitudes = new ArrayList<Float>(gyroscopicMagnitudes.subList(windowSize,gyroscopicMagnitudes.size()));
 
         } else if (sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION && accelerationValues.size() < Constants.WINDOW_SIZE) {
             float accelerationAxisX = event.values[0];

@@ -4,6 +4,7 @@ public class Constants {
 
     // URL components
     public static final String SERVER_IP = "http://35.177.151.54/";
+    public static final String WS_SERVER = "ws://90.84.47.92/websock";
     public static final String LOGIN_URL = "login.php";
     public static final String REGISTER_URL = "register.php";
 

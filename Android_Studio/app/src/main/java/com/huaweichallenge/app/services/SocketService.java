@@ -8,8 +8,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.huaweichallenge.app.Constants;
 import com.huaweichallenge.app.R;
 
 import org.java_websocket.client.WebSocketClient;
@@ -18,6 +20,7 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 
 public class SocketService extends IntentService {
@@ -30,7 +33,7 @@ public class SocketService extends IntentService {
 
 
     // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "PARAM1";
+    private static final String EXTRA_PARAM = "PARAM";
 
     public SocketService() {
         super("SocketService");
@@ -42,10 +45,10 @@ public class SocketService extends IntentService {
         context.startService(intent);
     }
 
-    public static void startSendMessage(Context context, String param1) {
+    public static void startSendMessage(Context context, HashMap<String, Float> param1) {
         Intent intent = new Intent(context, SocketService.class);
         intent.setAction(ACTION_SEND_MESSAGE);
-        intent.putExtra(EXTRA_PARAM1, param1);
+        intent.putExtra(EXTRA_PARAM, param1);
         context.startService(intent);
     }
 
@@ -61,21 +64,22 @@ public class SocketService extends IntentService {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_CONNECTION_SOCKET.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
+                final String param1 = intent.getStringExtra(EXTRA_PARAM);
                 handleConnectWebSocket();
             } else if (ACTION_SEND_MESSAGE.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                handleSendMessage(param1);
+                final HashMap<String, Float> param = (HashMap<String, Float>) intent.getSerializableExtra(EXTRA_PARAM) ;
+                handleSendMessage(param);
             } else if (ACTION_CLOSE_SOCKET.equals(action)) {
                 handleCloseSocket();
             }
         }
     }
 
+
     private void handleConnectWebSocket() {
         URI uri;
         try {
-            uri = new URI("ws://10.0.2.2:8888");
+            uri = new URI(Constants.WS_SERVER);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             return;
@@ -84,6 +88,7 @@ public class SocketService extends IntentService {
         mWebSocketClient = new WebSocketClient(uri) {
             @Override
             public void onOpen(ServerHandshake serverHandshake) {
+                //toastMessage("Connection established.");
                 Log.i("Websocket", "Opened");
             }
 
@@ -100,24 +105,16 @@ public class SocketService extends IntentService {
 
             @Override
             public void onError(Exception e) {
+                //toastMessage("Established Connection.");
                 Log.i("Websocket", "Error " + e.getMessage());
             }
         };
         mWebSocketClient.connect();
     }
 
-    private void handleSendMessage(String param1) {
+    private void handleSendMessage(HashMap<String, Float> data) {
 
-        Log.i("Websocket", "J'ENVOIE");
-        JSONObject jsonBody = new JSONObject();
-        try {
-
-            jsonBody.put("Coucou", "Je suis al");
-            jsonBody.put("Toto", "Titi");
-
-        } catch (org.json.JSONException e) {
-            Log.e("JSON", "Unable to create JSON.");
-        }
+        JSONObject jsonBody = new JSONObject(data);
 
         mWebSocketClient.send(jsonBody.toString());
     }
@@ -125,4 +122,14 @@ public class SocketService extends IntentService {
     private void handleCloseSocket() {
         mWebSocketClient.close();
     }
+
+    //TODO: Make this work
+
+/*    private void toastMessage(String message) {
+        Context context = getApplicationContext();
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, message, duration);
+        toast.show();
+    }*/
 }

@@ -10,9 +10,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.huaweichallenge.app.services.RegisterService;
+import com.huaweichallenge.app.services.SensorService;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -27,14 +29,6 @@ public class RegisterActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
         receiver = new RegisterReceiver();
     }
 
@@ -52,37 +46,8 @@ public class RegisterActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
-    public void registerButtonClicked(View view) {
-        boolean wrongInput = false;
-
-        String username = getStringFromEditText((EditText) findViewById(R.id.username));
-        String mail = getStringFromEditText((EditText) findViewById(R.id.email_address));
-        String address = getStringFromEditText((EditText) findViewById(R.id.address));
-        String sex = getStringFromEditText((EditText) findViewById(R.id.sex));
-        String password = getStringFromEditText((EditText) findViewById(R.id.password));
-        String confirmPassword = getStringFromEditText((EditText) findViewById(R.id.confirm_password));
-
-        if (mail.isEmpty() || !mail.matches(EMAIL_REGEX)) {
-            ((EditText) findViewById(R.id.email_address)).setError("Enter a valid email address.");
-            wrongInput = true;
-        }
-
-        if (password.isEmpty() || !password.matches(PASSWORD_REGEX)) {
-            ((EditText) findViewById(R.id.password)).setError("Password must contain one upper case letter and one digit.");
-            wrongInput = true;
-        } else if (password.isEmpty() || !password.equals(confirmPassword)) {
-            ((EditText) findViewById(R.id.password)).setError("Passwords did not match.");
-            wrongInput = true;
-        }
-
-        if (!wrongInput) {
-            RegisterService.startActionRegister(this,
-                    username,
-                    mail,
-                    address,
-                    sex,
-                    password);
-        }
+    public void startButtonClicked(View view) {
+        startActivity(new Intent(RegisterActivity.this, SensorActivity.class));
     }
 
     private String getStringFromEditText(EditText editText) {

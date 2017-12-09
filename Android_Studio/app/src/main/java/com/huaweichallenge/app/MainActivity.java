@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onHTTPButtonClick(View view) {
-        final TextView mTextView = (TextView) findViewById(R.id.textView2);
 
 
         HashMap<String, Float> data = new HashMap<>();

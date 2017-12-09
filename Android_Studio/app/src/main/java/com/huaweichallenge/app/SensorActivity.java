@@ -132,6 +132,14 @@ public class SensorActivity extends AppCompatActivity {
         registerReceiver(socketReceiver, filter2);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        unregisterReceiver(socketReceiver);
+        unregisterReceiver(sensorReceiver);
+    }
+
     protected void handleCounter(int label) {
         int prev = counter[label-1] +1;
         Arrays.fill(counter, 0);

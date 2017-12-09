@@ -5,7 +5,6 @@ import math
 from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
 
-USER_FOLDER_PATH = "/home/pierre/Desktop/Huawei Challenge/Data/TrainingData/SHLDataset_preview_v1/User1/"
 WINDOW_SIZE = 2
 SAMPLE_FREQUENCY = 100 # Hz
 SAVING_PATH = "./training_dataset.csv"
@@ -74,7 +73,7 @@ def parse_data_from_one_body_part_training(trip_path, body_part):
                         metrics = compute_metrics(batch)
                         csv_writer.writerow(metrics)
                         batch = []
-                    if count % 1000 == 0:
+                    if count % 100000 == 0:
                         print(count)
 
 
@@ -84,7 +83,12 @@ def parse_trip(trip_folder_path):
         parse_data_from_one_body_part_training(trip_folder_path, body_part)
 
 if __name__ == "__main__":
-    trips = [os.path.join(USER_FOLDER_PATH, x) for x in os.listdir(USER_FOLDER_PATH) if os.path.isdir(os.path.join(USER_FOLDER_PATH, x))]
-    for trip in trips:
-        print("Parsing trip {} ...".format(os.path.basename(trip)))
-        parse_trip(trip)
+    data_root_path = "/home/pierre/Desktop/Huawei Challenge/Data/TrainingData/SHLDataset_preview_v1/"
+    users = [user for user in os.listdir(data_root_path) if "User" in user]
+    users = [os.path.join(data_root_path, user) for user in users]
+
+    for user in users:
+        trips = [os.path.join(user, x) for x in os.listdir(user) if os.path.isdir(os.path.join(user, x))]
+        for trip in trips:
+            print("Parsing trip {} for user {}...".format(os.path.basename(trip), os.path.basename(user)))
+            parse_trip(trip)

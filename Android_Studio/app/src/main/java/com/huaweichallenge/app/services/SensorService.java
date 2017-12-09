@@ -196,11 +196,6 @@ public class SensorService extends Service implements SensorEventListener {
                     }
                 }.start();
             }
-
-            System.out.println("Gyro X : " + gyroscopicAxisX);
-            System.out.println("Gyro Y : " + gyroscopicAxisY);
-            System.out.println("Gyro Z : " + gyroscopicAxisZ);
-            System.out.println("Gyro magnitude : " + gyroscopicMagnitude);
         }
     }
 

@@ -8,11 +8,38 @@
     tools:context="com.huaweichallenge.app.SensorActivity"
     tools:showIn="@layout/activity_sensor">
 
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="260dp"
+        android:layout_height="451dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/bike" />
+
     <TextView
-        android:id="@+id/activityResponse"
-        android:layout_width="129dp"
-        android:layout_height="109dp"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="180dp" />
+        android:id="@+id/textView4"
+        android:layout_width="289dp"
+        android:layout_height="209dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/amatica_sc_bold"
+        android:text="You've been inactive for too long. Go take a walk!"
+        android:textAlignment="center"
+        android:textColor="@color/colorAccent"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.506"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.921" />
 </android.support.constraint.ConstraintLayout>

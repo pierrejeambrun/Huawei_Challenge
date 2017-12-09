@@ -13,13 +13,9 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.huaweichallenge.app.services.MapsService;
 import com.huaweichallenge.app.services.SensorService;
 import com.huaweichallenge.app.services.SocketService;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SensorActivity extends AppCompatActivity {
@@ -27,12 +23,14 @@ public class SensorActivity extends AppCompatActivity {
     public class SensorReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            HashMap<String, Float> sensors = (HashMap<String, Float>) intent.getSerializableExtra("sensorDataMap");
-            SocketService.startSendMessage(context, sensors);
+            HashMap<String, Float> sensors =
+                    (HashMap<String, Float>) intent.getSerializableExtra("sensorDataMap");
+            SocketService.startSendMessage(SensorActivity.this, sensors);
         }
     }
 
     public class SocketReceiver extends BroadcastReceiver {
+        public static final String GET_ACTIVITY = "GET_ACTIVITY";
         @Override
         public void onReceive(Context context, Intent intent) {
             String sensors =  intent.getStringExtra("activityResponse");
@@ -53,8 +51,13 @@ public class SensorActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        SocketService.startConnectWebSocket(this);
+
+        SensorService.startActionGetSensorValues(this);
+
         sensorReceiver = new SensorReceiver();
         socketReceiver = new SocketReceiver();
+
         mTextView = (TextView) findViewById(R.id.activityResponse);
 
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -65,10 +68,6 @@ public class SensorActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
-
-        SocketService.startConnectWebSocket(this);
-
-        SensorService.startActionGetSensorValues(this);
     }
 
     @Override
@@ -80,8 +79,8 @@ public class SensorActivity extends AppCompatActivity {
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(sensorReceiver, filter);
 
-        IntentFilter filter2 = new IntentFilter(SocketService.GET_ACTIVITY);
-        filter.addCategory(Intent.CATEGORY_DEFAULT);
+        IntentFilter filter2 = new IntentFilter(SocketReceiver.GET_ACTIVITY);
+        filter2.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(socketReceiver, filter2);
     }
 }

@@ -67,7 +67,7 @@ public class SensorService extends IntentService implements SensorEventListener 
 
         if( accelerationValues.size() == Constants.WINDOW_SIZE && gyroscopicValues.size() == Constants.WINDOW_SIZE) {
 
-            setDataHashMapInBundle(sentData);
+            setDataHashMapInBundle();
 
             accelerationValues = new ArrayList<>();
             gyroscopicValues = new ArrayList<>();
@@ -183,7 +183,7 @@ public class SensorService extends IntentService implements SensorEventListener 
 
     }
 
-    private void setDataHashMapInBundle(HashMap<String, Float> sentData) {
+    private void setDataHashMapInBundle() {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         Log.i("SENDING ", "DATA DFHGSDHSDFGSDGS");

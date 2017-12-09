@@ -4,6 +4,10 @@ import tornado.web as web
 import tornado.websocket as websocket
 import json
 
+class MainHandler(web.RequestHandler):
+    def get(self):
+        self.write("There is nothing for you here. ;)")
+
 class webSocketHandler(websocket.WebSocketHandler):
     def open(self):
             print("WebSocket opened")
@@ -28,7 +32,8 @@ class webSocketHandler(websocket.WebSocketHandler):
 
 def make_app():
     return web.Application([
-        (r"/", webSocketHandler),
+        (r"/websock", webSocketHandler),
+        (r"/", MainHandler)
     ])
 
 if __name__ == "__main__":

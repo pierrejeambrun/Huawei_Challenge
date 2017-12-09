@@ -1,9 +1,8 @@
 package com.huaweichallenge.app.services;
 
 import android.app.IntentService;
-import android.content.Intent;
 import android.content.Context;
-import android.content.IntentFilter;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -19,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import static com.huaweichallenge.app.Constants.LOGIN_URL;
-import static com.huaweichallenge.app.Constants.REGISTER_URL;
 
 public class RegisterService extends IntentService {
 

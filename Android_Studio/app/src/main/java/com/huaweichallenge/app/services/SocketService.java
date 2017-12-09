@@ -3,13 +3,11 @@ package com.huaweichallenge.app.services;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.huaweichallenge.app.Constants;
-import com.huaweichallenge.app.R;
 import com.huaweichallenge.app.SensorActivity;
 
 import org.java_websocket.client.WebSocketClient;

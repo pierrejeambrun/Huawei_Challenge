@@ -1,6 +1,7 @@
 import numpy as np
 import pickle
 import data_parsing
+import os
 
 model = pickle.load(open("./models/xgboost_model_2s.p","rb"))
 
@@ -64,17 +65,17 @@ def process_batch(input_path, output_path):
 
 
 def process_trip_batches(trip_path, output_root_path, user):
-    if not os.isdir(os.join(output_root_path, user)):
-        os.makedir(os.join(output_root_path, user))
+    if not os.path.isdir(os.path.join(output_root_path, user)):
+        os.makedirs(os.path.join(output_root_path, user))
 
-    output_trip_path = os.path.join(output_root_path, user, os.basename(trip_path))
-    if not os.isdir(output_trip_path):
-        os.makedir(output_trip_path)
+    output_trip_path = os.path.join(output_root_path, user, os.path.basename(trip_path))
+    if not os.path.isdir(output_trip_path):
+        os.makedirs(output_trip_path)
 
     motions_file_name = [x for x in os.listdir(trip_path) if "Motion" in x]
 
     for motion_file_name in motions_file_name:
-        process_batch(os.path.join(trip_path, motion_file_name), os.path.join(output_trip_path, "Label_{}.txt".format(motion_file_name.split(" ")[0])))
+        process_batch(os.path.join(trip_path, motion_file_name), os.path.join(output_trip_path, "Label_{}.txt".format(motion_file_name.split("_")[0])))
 
 def create_global_output_folder(data_root_path, output_root_path):
     users = [user for user in os.listdir(data_root_path) if "User" in user]
@@ -84,9 +85,9 @@ def create_global_output_folder(data_root_path, output_root_path):
         trips = [os.path.join(user, x) for x in os.listdir(user) if os.path.isdir(os.path.join(user, x))]
         for trip in trips:
             print("Parsing trip {} for user {}...".format(os.path.basename(trip), os.path.basename(user)))
-            process_trip_batches(trip, output_root_path, os.basename(user))
+            process_trip_batches(trip, output_root_path, os.path.basename(user))
 
 if __name__ == "__main__":
-    data_root_path = "/home/ubuntu/HackATon/Data/EvalData/SHLDataset_preview_v1/"
+    data_root_path = "/home/ubuntu/HackATon/Data/EvalData"
     output_root_path = "/home/ubuntu/HackATon/Output"
     create_global_output_folder(data_root_path, output_root_path)

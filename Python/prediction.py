@@ -1,7 +1,7 @@
 import numpy as np
 import pickle
 
-model = pickle.load(open("xgboost_model.p","rb"))
+model = pickle.load(open("./models/xgboost_model_2s.p","rb"))
 
 def predict(input_vector):
     input_vector = input_vector[np.newaxis, :]

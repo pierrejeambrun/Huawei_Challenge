@@ -1,9 +1,12 @@
 package com.huaweichallenge.app.services;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Build;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -11,11 +14,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.huaweichallenge.app.Constants;
 import com.huaweichallenge.app.R;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URI;
@@ -30,6 +36,8 @@ public class SocketService extends IntentService {
     private static final String ACTION_CONNECTION_SOCKET = "CONNECTION_SOCKET";
     private static final String ACTION_SEND_MESSAGE = "SEND_MESSAGE";
     private static final String ACTION_CLOSE_SOCKET = "CLOSE_SOCKET";
+
+    public static final String GET_ACTIVITY = "GET_ACTIVITY";
 
 
     // TODO: Rename parameters
@@ -78,6 +86,7 @@ public class SocketService extends IntentService {
 
     private void handleConnectWebSocket() {
         URI uri;
+
         try {
             uri = new URI(Constants.WS_SERVER);
         } catch (URISyntaxException e) {
@@ -94,7 +103,23 @@ public class SocketService extends IntentService {
 
             @Override
             public void onMessage(String s) {
-                final String message = s;
+                try {
+                    final JSONObject parsedData = new JSONObject(s);
+
+                    // ON MESSAGE BROADCAST IT
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("activityResponse", s); //TODO PARSE THAT
+                    intent.setAction(GET_ACTIVITY);
+                    intent.putExtras(bundle);
+                    intent.addCategory(Intent.CATEGORY_DEFAULT);
+                    sendBroadcast(intent);
+
+
+                } catch (JSONException e) {
+                    Log.i("WebSocket", "Error parsing response");
+                }
+
                 Log.w("Socket","Received " + s);
             }
 

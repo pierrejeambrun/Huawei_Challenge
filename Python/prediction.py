@@ -19,3 +19,4 @@ if __name__ == "__main__":
     test = [1.17375118043,1.0,-0.128894988887,1.09504279337,0.540089569726,0.5,-0.09358088,0.568179152855]
     test = np.array(test)
     print(predict(test))
+    print(int(predict(test)))

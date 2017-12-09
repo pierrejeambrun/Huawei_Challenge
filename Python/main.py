@@ -2,7 +2,12 @@
 import tornado.ioloop as ioloop
 import tornado.web as web
 import tornado.websocket as websocket
+import tornado.httpserver as httpserver
 import json
+
+class MainHandler(web.RequestHandler):
+    def get(self):
+        self.write("There is nothing for you here. ;)")
 
 class webSocketHandler(websocket.WebSocketHandler):
     def open(self):
@@ -28,10 +33,13 @@ class webSocketHandler(websocket.WebSocketHandler):
 
 def make_app():
     return web.Application([
-        (r"/", webSocketHandler),
+        (r"/websock", webSocketHandler),
+        (r"/", MainHandler)
     ])
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8888)
+    server = httpserver.HTTPServer(app)
+    server.bind(80)
+    server.start(0)  # forks one process per cpu
     ioloop.IOLoop.current().start()

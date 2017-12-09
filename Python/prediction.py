@@ -62,8 +62,31 @@ def process_batch(input_path, output_path):
                 if count % 100000 == 0:
                     print(count)
 
+
+def process_trip_batches(trip_path, output_root_path, user):
+    if not os.isdir(os.join(output_root_path, user)):
+        os.makedir(os.join(output_root_path, user))
+
+    output_trip_path = os.path.join(output_root_path, user, os.basename(trip_path))
+    if not os.isdir(output_trip_path):
+        os.makedir(output_trip_path)
+
+    motions_file_name = [x for x in os.listdir(trip_path) if "Motion" in x]
+
+    for motion_file_name in motions_file_name:
+        process_batch(os.path.join(trip_path, motion_file_name), os.path.join(output_trip_path, "Label_{}.txt".format(motion_file_name.split(" ")[0])))
+
+def create_global_output_folder(data_root_path, output_root_path):
+    users = [user for user in os.listdir(data_root_path) if "User" in user]
+    users = [os.path.join(data_root_path, user) for user in users]
+
+    for user in users:
+        trips = [os.path.join(user, x) for x in os.listdir(user) if os.path.isdir(os.path.join(user, x))]
+        for trip in trips:
+            print("Parsing trip {} for user {}...".format(os.path.basename(trip), os.path.basename(user)))
+            process_trip_batches(trip, output_root_path, os.basename(user))
+
 if __name__ == "__main__":
-    # test = [1.17375118043,1.0,-0.128894988887,1.09504279337,0.540089569726,0.5,-0.09358088,0.568179152855]
-    # test = np.array(test)
-    # print(int(predict(test)))
-    process_batch("/home/pierre/Desktop/Huawei Challenge/Data/TrainingData/SHLDataset_preview_v1/User1/270617/Bag_Motion.txt", "./output_test.txt")
+    data_root_path = "/home/ubuntu/HackATon/Data/EvalData/SHLDataset_preview_v1/"
+    output_root_path = "/home/ubuntu/HackATon/Output"
+    create_global_output_folder(data_root_path, output_root_path)

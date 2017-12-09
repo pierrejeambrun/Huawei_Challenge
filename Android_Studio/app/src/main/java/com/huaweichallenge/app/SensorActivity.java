@@ -66,8 +66,10 @@ public class SensorActivity extends AppCompatActivity {
             }
         });
 
-        SocketService.startConnectWebSocket(this);
-        SensorService.startActionGetSensorValues(this);
+        Intent sensorIntent = new Intent(this, SensorService.class);
+        startService(sensorIntent);
+        Intent socketIntent = new Intent(this, SocketService.class);
+        startService(socketIntent);
     }
 
     @Override

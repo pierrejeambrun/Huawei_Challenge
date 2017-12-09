@@ -36,7 +36,7 @@
         <activity
             android:name=".LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".services.LoginService"
@@ -55,14 +55,24 @@
             android:exported="false" />
         <service
             android:name=".services.SocketService"
-            android:exported="false"></service>
+            android:exported="false" />
         <service
             android:name=".services.SensorService"
             android:enabled="true"
             android:exported="true" />
-        <receiver android:name=".services.SocketService$SensorReceiver" android:enabled="true">
+
+        <receiver
+            android:name=".SensorActivity$SensorReceiver"
+            android:enabled="true">
             <intent-filter>
-                <action android:name=".services.SensorService.SEND_DATA"></action>
+                <action android:name=".services.SensorService.SEND_DATA" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name=".SensorActivity$SocketReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name=".services.SensorService.GET_ACTIVITY" />
             </intent-filter>
         </receiver>
 
@@ -76,6 +86,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
     </application>
 
 </manifest>

@@ -9,7 +9,7 @@ public class Constants {
     public static final String REGISTER_URL = "register.php";
 
     //Sensor Sampling
-    public static final int WINDOW_SIZE = 20;
+    public static final int WINDOW_SIZE = 200;
 
     // Memory
     public static final String USER_ID_TOKEN_LOCAL_STORAGE = "userId_token_local_storage";

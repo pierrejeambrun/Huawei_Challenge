@@ -2,6 +2,7 @@ import numpy as np
 import pickle
 import data_parsing
 import os
+import argparse
 
 model = pickle.load(open("./models/xgboost_model_2s.p","rb"))
 
@@ -88,6 +89,16 @@ def create_global_output_folder(data_root_path, output_root_path):
             process_trip_batches(trip, output_root_path, os.path.basename(user))
 
 if __name__ == "__main__":
-    data_root_path = "/home/ubuntu/HackATon/Data/EvalData"
-    output_root_path = "/home/ubuntu/HackATon/Output"
+    parser = argparse.ArgumentParser(description="Give the path of your yoot dataset folder")
+    parser.add_argument('--input', help='Input file', required=True)
+    parser.add_argument('--output', help='Output folder to save data', required=True)
+    args = parser.parse_args()
+    print(args.input)
+    print(args.output)
+    #"/home/ubuntu/HackATon/Data/EvalData"
+    data_root_path = args.input
+    #"/home/ubuntu/HackATon/Output"
+    output_root_path = args.output
+    if not os.path.isdir(output_root_path):
+        os.makedirs(os.path.join(output_root_path))
     create_global_output_folder(data_root_path, output_root_path)

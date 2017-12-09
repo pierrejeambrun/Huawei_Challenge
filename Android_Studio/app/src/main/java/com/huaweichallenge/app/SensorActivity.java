@@ -67,7 +67,6 @@ public class SensorActivity extends AppCompatActivity {
         });
 
         SocketService.startConnectWebSocket(this);
-
         SensorService.startActionGetSensorValues(this);
     }
 

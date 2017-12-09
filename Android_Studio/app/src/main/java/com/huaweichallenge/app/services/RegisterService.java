@@ -3,6 +3,7 @@ package com.huaweichallenge.app.services;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -17,6 +18,7 @@ import com.huaweichallenge.app.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import static com.huaweichallenge.app.Constants.LOGIN_URL;
 import static com.huaweichallenge.app.Constants.REGISTER_URL;
 
 public class RegisterService extends IntentService {
@@ -71,7 +73,7 @@ public class RegisterService extends IntentService {
                                       String password) {
         try {
             RequestQueue requestQueue = Volley.newRequestQueue(this);
-            String URL = Constants.SERVER_IP + REGISTER_URL;
+            String URL = Constants.SERVER_IP + LOGIN_URL;
             JSONObject jsonBody = new JSONObject();
             jsonBody.put("username", username);
             jsonBody.put("mail", mail);

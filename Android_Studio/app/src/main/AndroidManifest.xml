@@ -54,9 +54,17 @@
             android:name=".services.RegisterService"
             android:exported="false" />
         <service
+            android:name=".services.SocketService"
+            android:exported="false"></service>
+        <service
             android:name=".services.SensorService"
             android:enabled="true"
             android:exported="true" />
+        <receiver android:name=".services.SocketService$SensorReceiver" android:enabled="true">
+            <intent-filter>
+                <action android:name=".services.SensorService.SEND_DATA"></action>
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".SensorActivity"
@@ -68,7 +76,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

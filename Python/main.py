@@ -5,6 +5,8 @@ import tornado.websocket as websocket
 import tornado.httpserver as httpserver
 from random import randint
 import json
+import prediction
+import numpy as np
 
 class MainHandler(web.RequestHandler):
     def get(self):
@@ -42,7 +44,7 @@ class webSocketHandler(websocket.WebSocketHandler):
                 parsedData['gyroscopicMean'],
                 parsedData['gyroscopicStd']
             ]
-	except ValueError:
+        except ValueError as e:
             self.write_message(json.dumps({"success": False, "error": "invalid json"}))
 
         self.write_message(json.dumps({"success": True, "data": self.handleData(data)}))
@@ -52,8 +54,11 @@ class webSocketHandler(websocket.WebSocketHandler):
 
     def handleData(self, data):
         #DO STUFF HERE
-	print(data)
-        return randint(1,4)
+        print("data:" , data)
+        predictionResult = prediction.predict(np.array(data))
+        print(predictionResult)
+        print(predictionResult.shape)
+        return int(predictionResult)
 
 def make_app():
     return web.Application([

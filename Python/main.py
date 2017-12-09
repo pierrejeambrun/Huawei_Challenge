@@ -2,6 +2,7 @@
 import tornado.ioloop as ioloop
 import tornado.web as web
 import tornado.websocket as websocket
+import tornado.httpserver as httpserver
 import json
 
 class MainHandler(web.RequestHandler):
@@ -38,5 +39,7 @@ def make_app():
 
 if __name__ == "__main__":
     app = make_app()
-    app.listen(8888)
+    server = httpserver.HTTPServer(app)
+    server.bind(80)
+    server.start(0)  # forks one process per cpu
     ioloop.IOLoop.current().start()

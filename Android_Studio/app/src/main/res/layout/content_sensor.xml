@@ -8,4 +8,11 @@
     tools:context="com.huaweichallenge.app.SensorActivity"
     tools:showIn="@layout/activity_sensor">
 
+    <TextView
+        android:id="@+id/activityResponse"
+        android:layout_width="129dp"
+        android:layout_height="109dp"
+        android:text="TextView"
+        tools:layout_editor_absoluteX="108dp"
+        tools:layout_editor_absoluteY="180dp" />
 </android.support.constraint.ConstraintLayout>

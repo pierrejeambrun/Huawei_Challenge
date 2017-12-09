@@ -5,7 +5,7 @@ import math
 from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
 
-WINDOW_SIZE = 2
+WINDOW_SIZE = 2.56
 SAMPLE_FREQUENCY = 100 # Hz
 SAVING_PATH = "./training_dataset.csv"
 
@@ -83,7 +83,7 @@ def parse_trip(trip_folder_path):
         parse_data_from_one_body_part_training(trip_folder_path, body_part)
 
 if __name__ == "__main__":
-    data_root_path = "/home/pierre/Desktop/Huawei Challenge/Data/TrainingData/SHLDataset_preview_v1/"
+    data_root_path = "/home/ubuntu/HackATon/Data/TrainingData/SHLDataset_preview_v1/"
     users = [user for user in os.listdir(data_root_path) if "User" in user]
     users = [os.path.join(data_root_path, user) for user in users]
 

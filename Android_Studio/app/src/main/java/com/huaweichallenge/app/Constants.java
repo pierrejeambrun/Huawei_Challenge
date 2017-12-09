@@ -9,7 +9,8 @@ public class Constants {
     public static final String REGISTER_URL = "register.php";
 
     //Sensor Sampling
-    public static final int WINDOW_SIZE = 256;
+    public static final int WINDOW_SIZE = 128;
+    public static final int TOO_MUCH_COUNT = 5;
 
     // Memory
     public static final String USER_ID_TOKEN_LOCAL_STORAGE = "userId_token_local_storage";

@@ -4,4 +4,9 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">RegisterActivity</string>
     <string name="title_activity_sensor">SensorActivity</string>
+
+    <string name="toomuch_still">You\'ve been inactive for too long. Go take a walk!</string>
+    <string name="toomuch_walk">Right on! Walking is good for your health!</string>
+    <string name="toomuch_run">Impressive! Don\'t forget to breathe!</string>
+    <string name="toomuch_bike">Wow! Are you training for Tour de France?</string>
 </resources>

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.huaweichallenge.app.services.SensorService;
 import com.huaweichallenge.app.services.SocketService;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -85,6 +86,7 @@ public class SensorActivity extends AppCompatActivity {
     private int[] counter;
 
     private ImageView mImageView;
+    private TextView mTextView;
     private SensorReceiver sensorReceiver;
     private SocketReceiver socketReceiver;
 
@@ -106,6 +108,7 @@ public class SensorActivity extends AppCompatActivity {
         Arrays.fill(counter, 0);
 
         mImageView = (ImageView) findViewById(R.id.imageView2);
+        mTextView = (TextView) findViewById(R.id.textView4);
 
         Intent sensorIntent = new Intent(this, SensorService.class);
         startService(sensorIntent);
@@ -130,9 +133,20 @@ public class SensorActivity extends AppCompatActivity {
     }
 
     protected void handleCounter(int label) {
-        counter[label-1] ++;
+        int prev = counter[label-1] +1;
+        Arrays.fill(counter, 0);
+        counter[label-1] = prev;
 
-        if (counter[label - 1] > 10 && label == 1 ) { //STILL
+        if (counter[label - 1] >= Constants.TOO_MUCH_COUNT && label == 1 ) { //STILL
+            mTextView.setText(getString(R.string.toomuch_still));
+        } else if (counter[label - 1] >= Constants.TOO_MUCH_COUNT && label == 2 ) { //WALK
+            mTextView.setText(getString(R.string.toomuch_walk));
+        } else if (counter[label - 1] >= Constants.TOO_MUCH_COUNT && label == 3 ) { //RUN
+            mTextView.setText(getString(R.string.toomuch_run));
+        } else if (counter[label - 1] >= Constants.TOO_MUCH_COUNT && label == 4 ) { //BIKE
+            mTextView.setText(getString(R.string.toomuch_bike));
+        } else {
+            mTextView.setText("");
         }
     }
 }

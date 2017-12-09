@@ -58,6 +58,9 @@
 
         <service
             android:name=".services.RegisterService"
+            android:exported="false" />
+        <service
+            android:name=".services.SocketService"
             android:exported="false"></service>
     </application>
 

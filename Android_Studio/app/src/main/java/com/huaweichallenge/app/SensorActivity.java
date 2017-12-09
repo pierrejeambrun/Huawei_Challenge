@@ -68,6 +68,11 @@ public class SensorActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        Intent sensorIntent = new Intent(this, SensorService.class);
+        startService(sensorIntent);
+        Intent socketIntent = new Intent(this, SocketService.class);
+        startService(socketIntent);
     }
 
     @Override

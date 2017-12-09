@@ -1,24 +1,19 @@
 package com.huaweichallenge.app.services;
 
-import android.app.IntentService;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
+import android.app.Service;
 import android.content.Context;
-import android.content.IntentFilter;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
 
-
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.huaweichallenge.app.Constants;
+<<<<<<< HEAD
 import com.huaweichallenge.app.R;
 import com.huaweichallenge.app.SensorActivity;
+=======
+>>>>>>> 8874cb717ba7b3164deb0e1509a1bb3ff9b112a9
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -30,7 +25,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 
 
-public class SocketService extends IntentService {
+public class SocketService extends Service {
 
     private static WebSocketClient mWebSocketClient;
 
@@ -43,7 +38,12 @@ public class SocketService extends IntentService {
     private static final String EXTRA_PARAM = "PARAM";
 
     public SocketService() {
-        super("SocketService");
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     public static void startConnectWebSocket(Context context) {
@@ -74,7 +74,7 @@ public class SocketService extends IntentService {
                 final String param1 = intent.getStringExtra(EXTRA_PARAM);
                 handleConnectWebSocket();
             } else if (ACTION_SEND_MESSAGE.equals(action)) {
-                final HashMap<String, Float> param = (HashMap<String, Float>) intent.getSerializableExtra(EXTRA_PARAM) ;
+                final HashMap<String, Float> param = (HashMap<String, Float>) intent.getSerializableExtra(EXTRA_PARAM);
                 handleSendMessage(param);
             } else if (ACTION_CLOSE_SOCKET.equals(action)) {
                 handleCloseSocket();
@@ -108,7 +108,7 @@ public class SocketService extends IntentService {
                 } catch (JSONException e) {
                     Log.i("WebSocket", "Error parsing response");
                 }
-
+                
                 broadcastResponse(s);
 
                 Log.w("Socket","Received " + s);

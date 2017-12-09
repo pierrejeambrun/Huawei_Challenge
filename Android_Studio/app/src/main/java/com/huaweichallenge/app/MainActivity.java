@@ -18,6 +18,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.huaweichallenge.app.services.SocketService.ACTION_CONNECTION_SOCKET;
+import static com.huaweichallenge.app.services.SocketService.ACTION_SEND_MESSAGE;
+import static com.huaweichallenge.app.services.SocketService.EXTRA_PARAM;
+
 public class MainActivity extends AppCompatActivity {
 
     /*public class HActivityReceiver extends BroadcastReceiver {
@@ -37,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        SocketService.startConnectWebSocket(this);
+        Intent socketIntent = new Intent(this, SocketService.class);
+        socketIntent.setAction(ACTION_CONNECTION_SOCKET);
+        startService(socketIntent);
 
     }
 
@@ -49,8 +55,14 @@ public class MainActivity extends AppCompatActivity {
     public void onHTTPButtonClick(View view) {
         final TextView mTextView = (TextView) findViewById(R.id.textView2);
 
+
         HashMap<String, Float> data = new HashMap<>();
         data.put("accelerometer", 0f);
-        SocketService.startSendMessage(this, data);
+
+        Intent socketIntent = new Intent(this, SocketService.class);
+        socketIntent.setAction(ACTION_SEND_MESSAGE);
+        socketIntent.putExtra(EXTRA_PARAM, data);
+        startService(socketIntent);
+
     }
 }

@@ -24,15 +24,15 @@ public class SocketService extends Service {
 
     private static WebSocketClient mWebSocketClient;
 
-    private static final String ACTION_CONNECTION_SOCKET = "CONNECTION_SOCKET";
-    private static final String ACTION_SEND_MESSAGE = "SEND_MESSAGE";
-    private static final String ACTION_CLOSE_SOCKET = "CLOSE_SOCKET";
+    public static final String ACTION_CONNECTION_SOCKET = "CONNECTION_SOCKET";
+    public static final String ACTION_SEND_MESSAGE = "SEND_MESSAGE";
+    public static final String ACTION_CLOSE_SOCKET = "CLOSE_SOCKET";
 
     public static final String GET_ACTIVITY = "GET_ACTIVITY";
 
 
     // TODO: Rename parameters
-    private static final String EXTRA_PARAM = "PARAM";
+    public static final String EXTRA_PARAM = "PARAM";
 
     public SocketService() {
     }
@@ -43,19 +43,6 @@ public class SocketService extends Service {
         return null;
     }
 
-    public static void startConnectWebSocket(Context context) {
-        Intent intent = new Intent(context, SocketService.class);
-        intent.setAction(ACTION_CONNECTION_SOCKET);
-        context.startService(intent);
-    }
-
-    public static void startSendMessage(Context context, HashMap<String, Float> param1) {
-        Intent intent = new Intent(context, SocketService.class);
-        intent.setAction(ACTION_SEND_MESSAGE);
-        intent.putExtra(EXTRA_PARAM, param1);
-        context.startService(intent);
-    }
-
     public static void startCloseSocket(Context context) {
         Intent intent = new Intent(context, SocketService.class);
         intent.setAction(ACTION_CLOSE_SOCKET);
@@ -64,19 +51,24 @@ public class SocketService extends Service {
 
 
     @Override
-    protected void onHandleIntent(Intent intent) {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent != null) {
             final String action = intent.getAction();
             if (ACTION_CONNECTION_SOCKET.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM);
                 handleConnectWebSocket();
             } else if (ACTION_SEND_MESSAGE.equals(action)) {
                 final HashMap<String, Float> param = (HashMap<String, Float>) intent.getSerializableExtra(EXTRA_PARAM);
-                handleSendMessage(param);
+                try {
+                    handleSendMessage(param);
+                } catch (RuntimeException e) {
+                    Log.e("ERREUR SOCKET", "coucou");
+                    handleConnectWebSocket();
+                }
             } else if (ACTION_CLOSE_SOCKET.equals(action)) {
                 handleCloseSocket();
             }
         }
+        return START_STICKY;
     }
 
 

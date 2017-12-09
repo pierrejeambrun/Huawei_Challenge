@@ -22,13 +22,20 @@ import com.huaweichallenge.app.services.SocketService;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static com.huaweichallenge.app.services.SocketService.ACTION_CONNECTION_SOCKET;
+import static com.huaweichallenge.app.services.SocketService.ACTION_SEND_MESSAGE;
+import static com.huaweichallenge.app.services.SocketService.EXTRA_PARAM;
+
 public class SensorActivity extends AppCompatActivity {
 
     public class SensorReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             HashMap<String, Float> sensors = (HashMap<String, Float>) intent.getSerializableExtra("sensorDataMap");
-            SocketService.startSendMessage(context, sensors);
+            Intent socketIntent = new Intent(context, SocketService.class);
+            socketIntent.setAction(ACTION_SEND_MESSAGE);
+            socketIntent.putExtra(EXTRA_PARAM, sensors);
+            context.startService(socketIntent);
         }
     }
 
@@ -68,7 +75,9 @@ public class SensorActivity extends AppCompatActivity {
 
         Intent sensorIntent = new Intent(this, SensorService.class);
         startService(sensorIntent);
+
         Intent socketIntent = new Intent(this, SocketService.class);
+        socketIntent.setAction(ACTION_CONNECTION_SOCKET);
         startService(socketIntent);
     }
 

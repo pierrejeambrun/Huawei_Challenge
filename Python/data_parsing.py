@@ -5,8 +5,8 @@ import math
 from scipy.signal import butter, lfilter, freqz
 import matplotlib.pyplot as plt
 
-SAMPLE_PATH = "/home/pierre/Desktop/Huawei Challenge/Data/TrainingData/SHLDataset_preview_v1/User1/270617"
-WINDOW_SIZE = 4
+USER_FOLDER_PATH = "/home/pierre/Desktop/Huawei Challenge/Data/TrainingData/SHLDataset_preview_v1/User1/"
+WINDOW_SIZE = 2
 SAMPLE_FREQUENCY = 100 # Hz
 SAVING_PATH = "./training_dataset.csv"
 
@@ -41,9 +41,9 @@ def compute_metrics(batch):
             np.mean(batch_np[:, 2]),  g_frequency, np.mean(batch_np[:, 3]), np.std(batch_np[:, 3]), int(round(np.mean(batch_np[:, -1])))]
     return result
 
-def parse_data_from_one_body_part_training(user_data_folder, body_part):
-    raw_data_file_path = os.path.join(SAMPLE_PATH, "{}_Motion.txt".format(body_part.title()))
-    labels_file_path = os.path.join(SAMPLE_PATH, "Label.txt".format(body_part.title()))
+def parse_data_from_one_body_part_training(trip_path, body_part):
+    raw_data_file_path = os.path.join(trip_path, "{}_Motion.txt".format(body_part.title()))
+    labels_file_path = os.path.join(trip_path, "Label.txt".format(body_part.title()))
 
     with open(raw_data_file_path, "r") as raw_file:
         with open(labels_file_path, "r") as label_file:
@@ -77,8 +77,14 @@ def parse_data_from_one_body_part_training(user_data_folder, body_part):
                     if count % 1000 == 0:
                         print(count)
 
-if __name__ == "__main__":
+
+def parse_trip(trip_folder_path):
     body_parts = ["bag", "hand", "hips", "torso"]
     for body_part in body_parts:
-        parse_data_from_one_body_part_training(SAMPLE_PATH, body_part)
-        print("Done parsing {}".format(body_part))
+        parse_data_from_one_body_part_training(trip_folder_path, body_part)
+
+if __name__ == "__main__":
+    trips = [os.path.join(USER_FOLDER_PATH, x) for x in os.listdir(USER_FOLDER_PATH) if os.path.isdir(os.path.join(USER_FOLDER_PATH, x))]
+    for trip in trips:
+        print("Parsing trip {} ...".format(os.path.basename(trip)))
+        parse_trip(trip)

@@ -9,11 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.huaweichallenge.app.Constants;
-<<<<<<< HEAD
 import com.huaweichallenge.app.R;
 import com.huaweichallenge.app.SensorActivity;
-=======
->>>>>>> 8874cb717ba7b3164deb0e1509a1bb3ff9b112a9
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;

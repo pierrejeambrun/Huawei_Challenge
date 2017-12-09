@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,11 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.huaweichallenge.app.services.SensorService;
 import com.huaweichallenge.app.services.SocketService;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Arrays;
 import java.util.HashMap;
 
 import static com.huaweichallenge.app.services.SocketService.ACTION_CONNECTION_SOCKET;
@@ -41,12 +47,44 @@ public class SensorActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             String sensors =  intent.getStringExtra("activityResponse");
 
-            Log.i("Stuff", "Happened");
-            mTextView.setText(sensors);
+            JSONObject jsonObject;
+            String uri = "";
+            try {
+                jsonObject = new JSONObject(sensors);
+                int label = (int) jsonObject.get("data");
+
+                handleCounter(label);
+
+                switch (label) {
+                    case 1:
+                        uri = "@drawable/sit";
+                        break;
+                    case 2:
+                        uri = "@drawable/walk";
+                        break;
+                    case 3:
+                        uri = "@drawable/run";
+                        break;
+                    case 4:
+                        uri = "@drawable/bike";
+                        break;
+                    default:
+                        break;
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
+
+            Drawable res = getResources().getDrawable(imageResource);
+            mImageView.setImageDrawable(res);
         }
     }
 
-    private TextView mTextView;
+    private int[] counter;
+
+    private ImageView mImageView;
     private SensorReceiver sensorReceiver;
     private SocketReceiver socketReceiver;
 
@@ -64,16 +102,10 @@ public class SensorActivity extends AppCompatActivity {
         sensorReceiver = new SensorReceiver();
         socketReceiver = new SocketReceiver();
 
-        mTextView = (TextView) findViewById(R.id.activityResponse);
+        counter = new int[4];
+        Arrays.fill(counter, 0);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        mImageView = (ImageView) findViewById(R.id.imageView2);
 
         Intent sensorIntent = new Intent(this, SensorService.class);
         startService(sensorIntent);
@@ -95,5 +127,12 @@ public class SensorActivity extends AppCompatActivity {
         IntentFilter filter2 = new IntentFilter(SocketReceiver.GET_ACTIVITY);
         filter2.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(socketReceiver, filter2);
+    }
+
+    protected void handleCounter(int label) {
+        counter[label-1] ++;
+
+        if (counter[label - 1] > 10 && label == 1 ) { //STILL
+        }
     }
 }

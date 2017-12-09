@@ -21,7 +21,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/bike" />
+        app:srcCompat="@drawable/sit" />
 
     <TextView
         android:id="@+id/textView4"
@@ -32,7 +32,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="@font/amatica_sc_bold"
-        android:text="You've been inactive for too long. Go take a walk!"
         android:textAlignment="center"
         android:textColor="@color/colorAccent"
         android:textSize="36sp"

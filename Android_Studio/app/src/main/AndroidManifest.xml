@@ -34,24 +34,15 @@
             android:resource="@array/preloaded_fonts" />
 
         <activity
-            android:name=".MapsActivity"
-            android:label="@string/title_activity_maps" />
-        <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
-
-        <service
-            android:name=".services.LoginService"
-            android:exported="false" />
-        <service
-            android:name=".services.MapsService"
-            android:exported="false" />
-
-        <activity
             android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/maintitle_activity_register"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".services.RegisterService"
@@ -83,11 +74,6 @@
             android:name=".SensorActivity"
             android:label="@string/title_activity_sensor"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
 
     </application>

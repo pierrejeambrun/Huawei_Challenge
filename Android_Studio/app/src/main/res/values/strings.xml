@@ -2,6 +2,14 @@
     <string name="app_name">Huawei Challenge</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_login">LoginActivity</string>
-    <string name="title_activity_register">RegisterActivity</string>
+    <string name="title_activity_register">Hi there!</string>
+    <string name="maintitle_activity_register">Activity Tracker</string>
+    <string name="subtitle_acivity_register">Welcome to SIStertiens\' tracking app</string>
+    <string name="start_activity_register">Start tracking</string>
     <string name="title_activity_sensor">SensorActivity</string>
+
+    <string name="toomuch_still">You\'ve been inactive for too long. Go take a walk!</string>
+    <string name="toomuch_walk">Right on! Walking is good for your health!</string>
+    <string name="toomuch_run">Impressive! Don\'t forget to breathe!</string>
+    <string name="toomuch_bike">Wow! Are you training for Tour de France?</string>
 </resources>

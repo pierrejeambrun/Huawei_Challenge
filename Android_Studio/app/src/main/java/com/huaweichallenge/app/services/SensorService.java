@@ -1,6 +1,5 @@
 package com.huaweichallenge.app.services;
 
-import android.app.IntentService;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -9,28 +8,22 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
 import com.huaweichallenge.app.Constants;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.complex.Complex;
 import org.apache.commons.math3.transform.DftNormalization;
 import org.apache.commons.math3.transform.FastFourierTransformer;
+import org.apache.commons.math3.transform.TransformType;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.commons.math3.complex.Complex;
-import org.apache.commons.math3.transform.TransformType;
 
 import uk.me.berndporr.iirj.Butterworth;
 
@@ -134,10 +127,6 @@ public class SensorService extends Service implements SensorEventListener {
                         sentData.put("accelerationMagnitudeMean", accelerationMagnitudeMean);
                         sentData.put("accelerationStd", accelerationStd);
                         sentData.put("accelerationFrequency", getFrequency(filteredAccelerationValues));
-                        Log.w("MEAN ACC",sentData.get("accelerationMean").toString());
-                        Log.w("MEAN MAG ACC",sentData.get("accelerationMagnitudeMean").toString());
-                        Log.w("STD ACC",sentData.get("accelerationStd").toString());
-                        Log.w("SENSOR VALUES ACCELERA",sentData.get("accelerationFrequency").toString());
                     }
                 }.start();
             }
@@ -192,8 +181,6 @@ public class SensorService extends Service implements SensorEventListener {
                         sentData.put("gyroscopicMagnitudeMean", gyroscopicMagnitudeMean);
                         sentData.put("gyroscopicStd", gyroscopicStd);
                         sentData.put("gyroscopicFrequency", getFrequency(filteredGyroscopicValues));
-                        Log.w("SENSOR VALUES",sentData.get("gyroscopicFrequency").toString());
-                        Log.w("STD GYR",sentData.get("gyroscopicStd").toString());
 
                     }
                 }.start();
@@ -204,7 +191,6 @@ public class SensorService extends Service implements SensorEventListener {
     private void setDataHashMapInBundle(ConcurrentHashMap<String, Float> sentData) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        Log.i("SENDING ", "DATA DFHGSDHSDFGSDGS");
         HashMap<String, Float> toto = new HashMap<>();
         bundle.putSerializable("sensorDataMap", sentData);
         intent.setAction(SEND_DATA);
@@ -249,9 +235,6 @@ public class SensorService extends Service implements SensorEventListener {
                 max = i;
             }
         }
-
-        Log.e("MAX", Integer.toString(max));
-        Log.e("SPECTRUM LENGTH", Integer.toString(spectrum.length));
 
         float returnValue = (float)max*100f/(float)spectrum.length;
         if(spectrum[max] > 1.0f) {

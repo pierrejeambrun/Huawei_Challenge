@@ -35,7 +35,7 @@
 
         <activity
             android:name=".RegisterActivity"
-            android:label="@string/title_activity_register"
+            android:label="@string/maintitle_activity_register"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

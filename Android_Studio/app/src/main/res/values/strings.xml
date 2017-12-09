@@ -3,6 +3,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_register">Hi there!</string>
+    <string name="maintitle_activity_register">Activity Tracker</string>
     <string name="subtitle_acivity_register">Welcome to SIStertiens\' tracking app</string>
     <string name="start_activity_register">Start tracking</string>
     <string name="title_activity_sensor">SensorActivity</string>

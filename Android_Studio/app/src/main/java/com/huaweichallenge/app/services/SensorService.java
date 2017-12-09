@@ -34,7 +34,7 @@ public class SensorService extends IntentService implements SensorEventListener 
     private SensorManager mSensorManager;
     private Sensor mLinearAccelerationSensor;
     private Sensor mGyroscopeSensor;
-    private Butterworth butterworth = new Butterworth();
+    private static Butterworth butterworth = new Butterworth();
 
     private ArrayList<float[]> accelerationValues = new ArrayList<>();
     private ArrayList<float[]> gyroscopicValues = new ArrayList<>();
@@ -42,6 +42,8 @@ public class SensorService extends IntentService implements SensorEventListener 
     private ArrayList<Float> gyroscopicMagnitudes = new ArrayList<>();
 
     private HashMap<String, Float> sentData = new HashMap<>();
+    private HashMap<String, Float> sentDataGyro = new HashMap<>();
+    private HashMap<String, Float> sentDataAcceleration = new HashMap<>();
 
     public SensorService() {
         super("SensorService");
@@ -75,17 +77,23 @@ public class SensorService extends IntentService implements SensorEventListener 
 
         Sensor sensor = event.sensor;
 
-        if( accelerationValues.size() == Constants.WINDOW_SIZE && gyroscopicValues.size() == Constants.WINDOW_SIZE) {
+        if(accelerationValues.size() == Constants.WINDOW_SIZE &&
+                gyroscopicValues.size() == Constants.WINDOW_SIZE &&
+                sentDataGyro.keySet().size() == 4 &&
+                sentDataAcceleration.keySet().size() == 4) {
 
+            sentData.putAll(sentDataGyro);
+            sentData.putAll(sentDataAcceleration);
             setDataHashMapInBundle(sentData);
 
+            sentDataGyro = new HashMap<>();
+            sentDataAcceleration = new HashMap<>();
             accelerationValues = new ArrayList<>();
             gyroscopicValues = new ArrayList<>();
             accelerationMagnitudes = new ArrayList<>();
             gyroscopicMagnitudes = new ArrayList<>();
-        }
 
-        else if (sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION && accelerationValues.size() < Constants.WINDOW_SIZE) {
+        } else if (sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION && accelerationValues.size() < Constants.WINDOW_SIZE) {
             float accelerationAxisX = event.values[0];
             float accelerationAxisY = event.values[1];
             float accelerationAxisZ = event.values[2];
@@ -125,10 +133,12 @@ public class SensorService extends IntentService implements SensorEventListener 
                         }
                         accelerationStd = (float)Math.sqrt(accelerationStd/Constants.WINDOW_SIZE);
 
-                        sentData.put("accelerationMean", accelerationMean);
-                        sentData.put("accelerationMagnitudeMean", accelerationMagnitudeMean);
-                        sentData.put("accelerationStd", accelerationStd);
-                        sentData.put("accelerationFrequency", getFrequency(filteredAccelerationValues));
+                        sentDataAcceleration.put("accelerationMean", accelerationMean);
+                        sentDataAcceleration.put("accelerationMagnitudeMean", accelerationMagnitudeMean);
+                        sentDataAcceleration.put("accelerationStd", accelerationStd);
+                        sentDataAcceleration.put("accelerationFrequency", getFrequency(filteredAccelerationValues));
+                        Log.w("SENSOR VALUES ACCELERA",sentDataAcceleration.get("accelerationFrequency").toString());
+
                     }
                 }.start();
             }
@@ -179,19 +189,20 @@ public class SensorService extends IntentService implements SensorEventListener 
                         }
                         gyroscopicStd = (float)Math.sqrt(gyroscopicStd/Constants.WINDOW_SIZE);
 
-                        sentData.put("gyroscopicMean", gyroscopicMean);
-                        sentData.put("gyroscopicMagnitudeMean", gyroscopicMagnitudeMean);
-                        sentData.put("gyroscopicStd", gyroscopicStd);
-                        sentData.put("gyroscopicFrequency", getFrequency(filteredGyroscopicValues));
+                        sentDataGyro.put("gyroscopicMean", gyroscopicMean);
+                        sentDataGyro.put("gyroscopicMagnitudeMean", gyroscopicMagnitudeMean);
+                        sentDataGyro.put("gyroscopicStd", gyroscopicStd);
+                        sentDataGyro.put("gyroscopicFrequency", getFrequency(filteredGyroscopicValues));
+                        Log.w("SENSOR VALUES",sentDataGyro.get("gyroscopicFrequency").toString());
 
                     }
                 }.start();
             }
 
-            /*System.out.println("Gyro X : " + gyroscopicAxisX);
+            System.out.println("Gyro X : " + gyroscopicAxisX);
             System.out.println("Gyro Y : " + gyroscopicAxisY);
             System.out.println("Gyro Z : " + gyroscopicAxisZ);
-            System.out.println("Gyro magnitude : " + gyroscopicMagnitude);*/
+            System.out.println("Gyro magnitude : " + gyroscopicMagnitude);
         }
 
     }
@@ -207,7 +218,7 @@ public class SensorService extends IntentService implements SensorEventListener 
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         sendBroadcast(intent);
 
-        sentData = new HashMap<>();
+        this.sentData = new HashMap<>();
     }
 
     @NonNull

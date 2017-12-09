@@ -10,8 +10,18 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.math3.transform.DftNormalization;
+import org.apache.commons.math3.transform.FastFourierTransformer;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
+
+import org.apache.commons.math3.complex.Complex;
+import org.apache.commons.math3.transform.TransformType;
 
 import uk.me.berndporr.iirj.Butterworth;
 
@@ -119,6 +129,7 @@ public class SensorService extends IntentService implements SensorEventListener 
                         sentData.put("accelerationMean", accelerationMean);
                         sentData.put("accelerationMagnitudeMean", accelerationMagnitudeMean);
                         sentData.put("accelerationStd", accelerationStd);
+                        sentData.put("accelerationFrequency", getFrequency(filteredAccelerationValues));
                     }
                 }.start();
             }
@@ -167,6 +178,8 @@ public class SensorService extends IntentService implements SensorEventListener 
                         sentData.put("gyroscopicMean", gyroscopicMean);
                         sentData.put("gyroscopicMagnitudeMean", gyroscopicMagnitudeMean);
                         sentData.put("gyroscopicStd", gyroscopicStd);
+                        sentData.put("gyroscopicFrequency", getFrequency(filteredGyroscopicValues));
+
                     }
                 }.start();
             }
@@ -205,6 +218,61 @@ public class SensorService extends IntentService implements SensorEventListener 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    private float getFrequency(ArrayList<Float> input){
+        double[] data = new double[input.size()];
+
+        for (int j = 0; j<input.size(); j++){
+            data[j] = (double) input.get(j);
+        }
+
+        float[] spectrum = applyFFT(data);
+
+        int max = 0;
+        for(int i = 0; i < spectrum.length; i++) {
+            if(spectrum[i] > spectrum[max]) {
+                max = i;
+            }
+        }
+        return max*100/spectrum.length;
+    }
+
+    private float[] applyFFT(double input[]) {
+
+        //fft works on data length = some power of two
+        int fftLength;
+        int length = input.length;  //initialized with input's length
+        int power = 0;
+        while (true) {
+            int powOfTwo = (int) Math.pow(2, power);  //maximum no. of values to be applied fft on
+
+            if (powOfTwo == length) {
+                fftLength = powOfTwo;
+                break;
+            }
+            if (powOfTwo > length) {
+                fftLength = (int) Math.pow(2, (power - 1));
+                break;
+            }
+            power++;
+        }
+
+        double[] tempInput = Arrays.copyOf(input, fftLength);
+        FastFourierTransformer fft = new FastFourierTransformer(DftNormalization.STANDARD);
+        //apply fft on input
+        Complex[] complexTransInput = fft.transform(tempInput, TransformType.FORWARD);
+
+        float[] output = new float[tempInput.length];
+
+        for (int i = 0; i < complexTransInput.length; i++) {
+            double real = (complexTransInput[i].getReal());
+            double img = (complexTransInput[i].getImaginary());
+
+            output[i] = (float) Math.sqrt((real * real) + (img * img));
+        }
+
+        return output;
     }
 
 }

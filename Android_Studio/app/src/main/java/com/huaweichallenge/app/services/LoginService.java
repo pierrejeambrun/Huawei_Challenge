@@ -77,7 +77,7 @@ public class LoginService extends IntentService {
                         editor.putString("token", response.getString("token"));
                         editor.apply();
 
-                        setLoginSuccessInBundle(true);
+                        sendLoginBroadCast(true);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -85,7 +85,7 @@ public class LoginService extends IntentService {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    setLoginSuccessInBundle(false);
+                    sendLoginBroadCast(false);
                     Log.e("VOLLEY", "Login Failed");
                 }
             }) {
@@ -100,7 +100,7 @@ public class LoginService extends IntentService {
         }
     }
 
-    private void setLoginSuccessInBundle(boolean value) {
+    private void sendLoginBroadCast(boolean value) {
         Intent intent = new Intent(LOGIN);
         Bundle bundle = new Bundle();
         bundle.putBoolean("loginSuccess", value);

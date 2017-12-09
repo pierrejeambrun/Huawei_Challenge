@@ -46,7 +46,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // on initialise notre broadcast
+        // Initialize the broadcast receiver
         markerReceiver = new MarkerReceiver();
     }
 
@@ -54,10 +54,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onResume() {
         super.onResume();
 
-        // on déclare notre Broadcast Receiver
+        // Register the receiver
         IntentFilter filter = new IntentFilter(ACTION_GET_MARKERS);
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(markerReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(markerReceiver);
     }
 
     @Override
@@ -78,6 +84,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         MapsService.startActionGetMarkers(this);
-
     }
 }

@@ -132,6 +132,9 @@ public class SensorService extends Service implements SensorEventListener {
                         sentData.put("accelerationMagnitudeMean", accelerationMagnitudeMean);
                         sentData.put("accelerationStd", accelerationStd);
                         sentData.put("accelerationFrequency", getFrequency(filteredAccelerationValues));
+                        Log.w("MEAN ACC",sentData.get("accelerationMean").toString());
+                        Log.w("MEAN MAG ACC",sentData.get("accelerationMagnitudeMean").toString());
+                        Log.w("STD ACC",sentData.get("accelerationStd").toString());
                         Log.w("SENSOR VALUES ACCELERA",sentData.get("accelerationFrequency").toString());
                     }
                 }.start();
@@ -188,6 +191,7 @@ public class SensorService extends Service implements SensorEventListener {
                         sentData.put("gyroscopicStd", gyroscopicStd);
                         sentData.put("gyroscopicFrequency", getFrequency(filteredGyroscopicValues));
                         Log.w("SENSOR VALUES",sentData.get("gyroscopicFrequency").toString());
+                        Log.w("STD GYR",sentData.get("gyroscopicStd").toString());
 
                     }
                 }.start();
@@ -247,7 +251,12 @@ public class SensorService extends Service implements SensorEventListener {
         Log.e("MAX", Integer.toString(max));
         Log.e("SPECTRUM LENGTH", Integer.toString(spectrum.length));
 
-        return (float)max*100f/(float)spectrum.length;
+        float returnValue = (float)max*100f/(float)spectrum.length;
+        if(spectrum[max] > 1.0f) {
+            return returnValue;
+        } else {
+            return 0f;
+        }
     }
 
     private float[] applyFFT(double input[]) {

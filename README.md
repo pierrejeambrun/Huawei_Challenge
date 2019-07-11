@@ -1,5 +1,5 @@
 # Huawei Challenge
-
+## Activity Tracking
 
 ### I Introduction
 This is the code used for the  **Huawei Challenge**.
